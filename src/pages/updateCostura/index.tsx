@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { serverTimestamp, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import { Header } from '../../components/header';
 import { useParams } from 'react-router-dom';
@@ -60,8 +60,11 @@ const UpdateCostura = () => {
     }, [id]);
     
 
-    const handleCosturaUpdate = async (e: React.FormEvent) => {
+    async function handleCosturaUpdate(e: React.FormEvent) {
         e.preventDefault();
+        if(!id) {
+            return;
+        }
     
         try {
             // Verifica se o nome da costura não está vazio
@@ -98,7 +101,7 @@ const UpdateCostura = () => {
             console.error('Erro ao atualizar costura:', error);
             alert('Ocorreu um erro ao atualizar a costura. Por favor, tente novamente.');
         }
-    };
+    }
 
     return (
         <div className='flex items-center flex-col min-h-screen pb-7 px-2'>
