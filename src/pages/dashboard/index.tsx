@@ -57,6 +57,12 @@ const Dashboard = () => {
 
             // Limpa o campo de input após a criação da costura
             setCosturaName('');
+            setTelefone('');
+            setTipo('');
+            setMedidas({});
+            setValor('');
+            setObservacoes('');
+            
             alert('Costura criada com sucesso!');
         } catch (error) {
             console.error('Erro ao criar costura:', error);
