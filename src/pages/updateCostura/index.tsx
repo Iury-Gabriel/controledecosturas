@@ -24,22 +24,26 @@ const UpdateCostura = () => {
     const { id } = useParams<{ id: string }>();
 
     useEffect(() => {
-        const fetchCosturaData = async () => {
+        async function loadCostura() {
+            if (!id) {
+                return;
+            }
+    
             try {
                 const userEmail = localStorage.getItem('userEmail');
                 if (!userEmail) {
                     console.error('O email do usuário não está disponível.');
                     return;
                 }
-
+    
                 const costuraDocRef = doc(db, 'usuarios', userEmail, 'costuras', id);
                 const costuraDocSnap = await getDoc(costuraDocRef);
-
+    
                 if (!costuraDocSnap.exists()) {
                     console.error('Costura não encontrada.');
                     return;
                 }
-
+    
                 const costuraData = costuraDocSnap.data();
                 setCosturaName(costuraData.name || '');
                 setTelefone(costuraData.telefone || '');
@@ -50,33 +54,34 @@ const UpdateCostura = () => {
             } catch (error) {
                 console.error('Erro ao obter dados da costura:', error);
             }
-        };
-
-        fetchCosturaData();
+        }
+    
+        loadCostura();
     }, [id]);
+    
 
     const handleCosturaUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
         try {
             // Verifica se o nome da costura não está vazio
-            if (costuraName.trim() === '' || telefone.trim() === '' || tipo.trim() === '' || valor.trim() === '' || medidas === null) {
+            if (costuraName.trim() === '' || telefone.trim() === '' || tipo.trim() === '' || valor.trim() === '' || Object.keys(medidas).length === 0) {
                 alert('Por favor, preencha as informações');
                 return;
             }
-
+    
             // Obtém o email do usuário do localStorage
             const userEmail = localStorage.getItem('userEmail');
-
+    
             // Verifica se o email do usuário está disponível
             if (!userEmail) {
                 alert('O email do usuário não está disponível.');
                 return;
             }
-
+    
             // Obtém a referência do documento da costura a ser atualizada
             const costuraDocRef = doc(db, 'usuarios', userEmail, 'costuras', id);
-
+    
             // Atualiza os campos da costura no Firestore
             await updateDoc(costuraDocRef, {
                 name: costuraName,
@@ -87,7 +92,7 @@ const UpdateCostura = () => {
                 medidas: medidas,
                 updatedAt: serverTimestamp(), // Adicione um campo para registrar a data da última atualização
             });
-
+    
             alert('Costura atualizada com sucesso!');
         } catch (error) {
             console.error('Erro ao atualizar costura:', error);
