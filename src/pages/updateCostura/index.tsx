@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { serverTimestamp, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../services/firebaseConnection';
 import { Header } from '../../components/header';
 import { useParams } from 'react-router-dom';
